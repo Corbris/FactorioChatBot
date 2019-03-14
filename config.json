@@ -1,0 +1,8 @@
+{
+   "chatLog": "Testing.txt",
+   "webHook": "www.webhook.com",
+   "channelListen": "12341234123412341234",
+   "RconIP": "192.168.1.90",
+   "RconPort": "8888",
+   "RconPassword": "password"
+}
