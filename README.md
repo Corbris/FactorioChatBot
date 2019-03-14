@@ -1,5 +1,5 @@
 # FactorioChatBot
-Bi-Directional bot integrating discord with Factorio chat
+Bi-Directional chat bot integrating Discord and Factorio Chat written in nodejs.
 
 # Setting RCON
 The Factorio server must have RCON enabled.
