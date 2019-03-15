@@ -1,8 +1,8 @@
 {
-   "chatLog": "Testing.txt",
-   "webHook": "www.webhook.com",
-   "channelListen": "12341234123412341234",
-   "RconIP": "192.168.1.90",
+   "chatLog": "C:\\Users\\USERPROFILE\\AppData\\Roaming\\Factorio\\script-output\\ChatLog.log",
+   "webHook": "https://discordapp.com/api/webhooks/000000000000000000/FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+   "channelListen": "000000000000000000",
+   "RconIP": "127.0.0.1",
    "RconPort": "8888",
    "RconPassword": "password"
 }

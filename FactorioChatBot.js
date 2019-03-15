@@ -50,7 +50,7 @@ bot.on("ready", () => {
 });
 
 bot.on("message", (message) => {
-	if(message.content > 0 && !message.author.bot && message.channel.id == config.channelListen)
+	if(message.content.length > 0 && !message.author.bot && message.channel.id === config.channelListen)
 	{
 		console.log(message.content);
 		conn.send('/silent-command game.print("[Discord] ' + message.author.username + ': ' + message.content + '")');

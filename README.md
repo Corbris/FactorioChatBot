@@ -1,41 +1,53 @@
 # FactorioChatBot
-2 way bot integrating discord with Factorio chat
+Bi-Directional chat bot integrating Discord and Factorio Chat written in nodejs.
 
-Factorio server mush use RCON.
+# Setting RCON
+The Factorio server must have RCON enabled.
+
+Launch Flags:
+
+--rcon-port <port>	Port to use for RCON
+  
+--rcon-password <pass>	Password for RCON
 
 # Dependencies
-npm discord.js
+Install NodeJS https://nodejs.org/en/
 
-npm webhook-discord
+To verify node is installed open an elevated cmd prompt and do "node -v" 
+the node version should be returned
 
-npm chokidar
+Navigate in the cmd prompt to the folder you have the FactorioChatBot (cd)
 
-npm rcon
+  Run the following commands within that directory
 
-# bot_auth
-set discord bot token
+npm install discord.js --save
+npm install webhook-discord --save
+npm install chokidar --save
+npm isntall rcon --save
 
-# config
-set chat Log Path
+# Configuration
+Configuration files bot_auth.json and config.json found in the FactorioChatBot root MUST be edited.
 
-set webHook URL (discord server webhook)
+bot_auth.json
+  Set Discord Bot Token
+  https://discordapp.com/developers/applications/
 
-set channel to listen for messages
+config.json
+  set ChatLog.log Directory Path (Generated after typing to chat on server with PSiChatUtil mod installed).
+    It's important to add double slashes Example : "C:\\Users\\UserProfile\\AppData\\Roaming\\Factorio\\script-output\\ChatLog.log"
 
-set RconIP
+  set webHook URL (discord server webhook)
+    https://support.discordapp.com/hc/en-us/articles/228383668-Intro-to-Webhooks
 
-set RconPort
+  set channelListen with your discord channel ID to listen on
+    https://support.discordapp.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-
 
-set RconPassword
+  set RconIP
 
-# webHook
-create a webHook on your discord server.
+  set RconPort
 
-set the URL in the config
+  set RconPassword
 
 # mod/PSiChatUtil
-creates chat log in the format, [user]message
-
-add this to mod folder
-
-
+Factorio Utility mod that exploits the write_file function to retrieve messages from in-game-chat.
+This mod is required on both server and client.
