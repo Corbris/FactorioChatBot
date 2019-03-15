@@ -9,7 +9,7 @@ Launch Flags:
 
 # Dependencies
 Install NodeJS https://nodejs.org/en/
-To verify node is installed open an elevated cmd prompt and do "node -v"
+  To verify node is installed open an elevated cmd prompt and do "node -v"
   the node version should be returned
 
 Navigate in the cmd prompt to the folder you have the FactorioChatBot (cd <dir>)
