@@ -33,7 +33,8 @@ bot_auth.json
   https://discordapp.com/developers/applications/
 
 config.json
-  set ChatLog.log Directory Path (Generated after typing to chat on server with PSiChatUtil mod installed)
+  set ChatLog.log Directory Path (Generated after typing to chat on server with PSiChatUtil mod installed).
+    It's important to add double slashes Example : "C:\\Users\\UserProfile\\AppData\\Roaming\\Factorio\\script-output\\ChatLog.log"
 
   set webHook URL (discord server webhook)
     https://support.discordapp.com/hc/en-us/articles/228383668-Intro-to-Webhooks
