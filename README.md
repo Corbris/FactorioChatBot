@@ -12,7 +12,7 @@ Install NodeJS https://nodejs.org/en/
   To verify node is installed open an elevated cmd prompt and do "node -v"
   the node version should be returned
 
-Navigate in the cmd prompt to the folder you have the FactorioChatBot (cd <dir>)
+Navigate in the cmd prompt to the folder you have the FactorioChatBot (cd)
   Run the following commands within that directory
 npm install discord.js --save
 npm install webhook-discord --save
