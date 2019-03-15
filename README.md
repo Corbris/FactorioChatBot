@@ -8,15 +8,20 @@ Launch Flags:
 --rcon-password <pass>	Password for RCON
 
 # Dependencies
-npm discord.js
+Install NodeJS https://nodejs.org/en/
+To verify node is installed open an elevated cmd prompt and do "node -v"
+  the node version should be returned
 
-npm webhook-discord
-
-npm chokidar
-
-npm rcon
+Navigate in the cmd prompt to the folder you have the FactorioChatBot (cd <dir>)
+  Run the following commands within that directory
+npm install discord.js --save
+npm install webhook-discord --save
+npm install chokidar --save
+npm isntall rcon --save
 
 # Configuration
+Configuration files bot_auth.json and config.json found in the FactorioChatBot root MUST be edited.
+
 bot_auth.json
   Set Discord Bot Token
   https://discordapp.com/developers/applications/
