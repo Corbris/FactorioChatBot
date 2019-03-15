@@ -5,7 +5,9 @@ Bi-Directional chat bot integrating Discord and Factorio Chat written in nodejs.
 The Factorio server must have RCON enabled.
 
 Launch Flags:
+
 --rcon-port <port>	Port to use for RCON
+  
 --rcon-password <pass>	Password for RCON
 
 # Dependencies
@@ -15,10 +17,15 @@ To verify node is installed open an elevated cmd prompt and do "node -v"
 the node version should be returned
 
 Navigate in the cmd prompt to the folder you have the FactorioChatBot (cd)
+
   Run the following commands within that directory
+
 npm install discord.js --save
+
 npm install webhook-discord --save
+
 npm install chokidar --save
+
 npm isntall rcon --save
 
 # Configuration
