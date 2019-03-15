@@ -4,7 +4,9 @@ Bi-Directional chat bot integrating Discord and Factorio Chat written in nodejs.
 # Setting RCON
 The Factorio server must have RCON enabled.
 Launch Flags:
+
 --rcon-port <port>	Port to use for RCON
+  
 --rcon-password <pass>	Password for RCON
 
 # Dependencies
