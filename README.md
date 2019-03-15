@@ -48,6 +48,19 @@ config.json
 
   set RconPassword
 
-# mod/PSiChatUtil
+# PSiChatUtil
 Factorio Utility mod that exploits the write_file function to retrieve messages from in-game-chat.
 This mod is required on both server and client.
+https://mods.factorio.com/mod/PSiChatUtil
+
+# Running
+--To run from console do-- 
+
+node FactorioChatBot.js
+
+--To run as a service--
+
+Install NSSM https://nssm.cc/
+
+Follow the example https://i.imgur.com/L9qBYV5.png
+
