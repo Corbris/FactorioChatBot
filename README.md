@@ -54,11 +54,11 @@ This mod is required on both server and client.
 https://mods.factorio.com/mod/PSiChatUtil
 
 # Running
-**To run from console do 
+--To run from console do-- 
 
 node FactorioChatBot.js
 
-**To run as a service
+--To run as a service--
 
 Install NSSM https://nssm.cc/
 
