@@ -1,5 +1,6 @@
 {
    "chatLog": "C:\\Users\\USERPROFILE\\AppData\\Roaming\\Factorio\\script-output\\ChatLog.log",
+   "playerLog": "C:\\Users\\USERPROFILE\\AppData\\Roaming\\Factorio\\script-output\\PlayerLog.log",
    "webHook": "https://discordapp.com/api/webhooks/000000000000000000/FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
    "channelListen": "000000000000000000",
    "RconIP": "127.0.0.1",
