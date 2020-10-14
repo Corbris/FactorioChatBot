@@ -41,7 +41,7 @@ bot_auth.json
 
 config.json
   set ChatLog.log Directory Path (Generated after typing to chat on server with PSiChatUtil mod installed).
-    It's important to add double slashes Example : "C:\\Users\\UserProfile\\AppData\\Roaming\\Factorio\\script-output\\ChatLog.log"
+    It's important to add double slashes Example : "C:\\\\Users\\\\UserProfile\\\\AppData\\\\Roaming\\\\Factorio\\\\script-output\\\\ChatLog.log"
 
   set PlayerLog.log (Same process as above)
 
