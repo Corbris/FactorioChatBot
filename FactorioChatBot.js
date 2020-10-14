@@ -5,18 +5,20 @@ const webhook = require("webhook-discord") //npm install webhook-discord
 var chokidar = require('chokidar'); //npm install chokidar
 var Rcon = require('rcon');  //npm install rcon
 
-var auth = require('./bot_auth.json');
-var config = require('./config.json');
-//var auth = require('C:\\Users\\Kevin Lucas\\Desktop\\Discord bots\\Factorio Chatbot\\TommyConfig\\bot_auth.json');
-//var config = require('C:\\Users\\Kevin Lucas\\Desktop\\Discord bots\\Factorio Chatbot\\TommyConfig\\config.json');
+//read config file via fs, so it can be packaged without the needed configs.
+let RAWauth = fs.readFileSync('./bot_auth.json');
+const auth = JSON.parse(RAWauth);
+
+let RAWconfig = fs.readFileSync('./config.json');
+const config  = JSON.parse(RAWconfig);
 
 
 const bot = new Discord.Client();
 const Hook = new webhook.Webhook(config.webHook);
 
 
-fs.writeFile(config.chatLog, '', function(){console.log('clear chat log')});
-fs.writeFile(config.playerLog, '', function(){console.log('clear player log')});
+fs.writeFile(config.chatLog, '', function(){});
+fs.writeFile(config.playerLog, '', function(){});
 
 bot.login(auth.token);
 
@@ -28,7 +30,6 @@ function RconConnect()
 		conn.on('auth', function() {
 		  console.log("Authed!");
 		}).on('response', function(str) {
-		  console.log("Got response: " + str);
 		}).on('end', function() {
 		  console.log("Socket closed!");
 		  //failed to connect try again
@@ -47,7 +48,6 @@ function RconConnect()
 bot.on("ready", () => {
 	//connect to rcon
 	RconConnect();
-    console.log('Connected');
     console.log('Logged in as: ');
     console.log(bot.username + ' - (' + bot.id + ')');
 
@@ -67,7 +67,6 @@ bot.on("message", (message) => {
 	//longetr then 0, not a bot, and in channel = channelListen
 	if(message.content.length > 0 && !message.author.bot && message.channel.id === config.channelListen)
 	{
-		console.log(message.content);
 		conn.send('/silent-command game.print("[Discord] ' + message.author.username + ': ' + message.content + '")');
 	}
 });
@@ -95,7 +94,6 @@ function readLastLine(path)
 		if (err) throw err;
 		var lines = data.trim().split('\n');
 		lastLine = lines.slice(-1)[0];
-		console.log(lastLine);
 		if(path == config.chatLog && lastLine.length > 0)  //chatlog
 		{
 			//pasrs name and message
@@ -114,7 +112,6 @@ function readLastLine(path)
 //discord webhook
 function sendMessage(name, msg)
 {
-	console.log(msg);
 	const send = new webhook.MessageBuilder()
                 .setName(name)
                 .setText(msg)
