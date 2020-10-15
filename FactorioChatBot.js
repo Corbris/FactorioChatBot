@@ -5,18 +5,20 @@ const webhook = require("webhook-discord") //npm install webhook-discord
 var chokidar = require('chokidar'); //npm install chokidar
 var Rcon = require('rcon');  //npm install rcon
 
-var auth = require('./bot_auth.json');
-var config = require('./config.json');
-//var auth = require('C:\\Users\\Kevin Lucas\\Desktop\\Discord bots\\Factorio Chatbot\\TommyConfig\\bot_auth.json');
-//var config = require('C:\\Users\\Kevin Lucas\\Desktop\\Discord bots\\Factorio Chatbot\\TommyConfig\\config.json');
+//read config file via fs, so it can be packaged without the needed configs.
+let RAWauth = fs.readFileSync('./bot_auth.json');
+const auth = JSON.parse(RAWauth);
+
+let RAWconfig = fs.readFileSync('./config.json');
+const config  = JSON.parse(RAWconfig);
 
 
 const bot = new Discord.Client();
 const Hook = new webhook.Webhook(config.webHook);
 
 
-fs.writeFile(config.chatLog, '', function(){console.log('clear chat log')});
-fs.writeFile(config.playerLog, '', function(){console.log('clear player log')});
+fs.writeFile(config.chatLog, '', function(){});
+fs.writeFile(config.playerLog, '', function(){});
 
 bot.login(auth.token);
 
@@ -25,21 +27,21 @@ var conn
 function RconConnect()
 {
 	conn = new Rcon(config.RconIP, config.RconPort, config.RconPassword);
-		conn.on('auth', function() {
-		  console.log("Authed!");
-		}).on('response', function(str) {
-		  console.log("Got response: " + str);
-		}).on('end', function() {
-		  console.log("Socket closed!");
-		  //failed to connect try again
-		  RconConnect();
-		}).on('error', function() {
-		  console.log("error");
-		  //failed to connect try again
-		  RconConnect();
-		});
-		console.log("connecting");
-		conn.connect();
+	conn.on('auth', function() {
+		consoleLogging("Rcon Authed!");
+	}).on('response', function(str) {
+		consoleLogging("Rcon response: " + str);
+	}).on('end', function() {
+		consoleLogging("Rcon Socket closed!");
+		//failed to connect try again
+		RconConnect();
+	}).on('error', function(e) {
+		consoleLogging("Rcon error: " + e);
+		//failed to connect try again
+		RconConnect();
+	});
+	consoleLogging("Connecting to Rcon");
+	conn.connect();
 }
 	
  
@@ -47,9 +49,7 @@ function RconConnect()
 bot.on("ready", () => {
 	//connect to rcon
 	RconConnect();
-    console.log('Connected');
-    console.log('Logged in as: ');
-    console.log(bot.username + ' - (' + bot.id + ')');
+    consoleLogging('Logged in as: ' + bot.user.username.toString() + ' - (' + bot.user.id.toString() + ')');
 
 	//watch the chat log file for update
 	chokidar.watch(config.chatLog, {ignored: /(^|[\/\\])\../}).on('all', (event, path) => {
@@ -67,8 +67,11 @@ bot.on("message", (message) => {
 	//longetr then 0, not a bot, and in channel = channelListen
 	if(message.content.length > 0 && !message.author.bot && message.channel.id === config.channelListen)
 	{
-		console.log(message.content);
-		conn.send('/silent-command game.print("[Discord] ' + message.author.username + ': ' + message.content + '")');
+		parseDiscordIDfromMessage(message.guild.id, message.content).then(parseMessage => {
+			consoleLogging("Discord to Rcon: (" + message.author.username + ': ' + parseMessage + ")");
+			conn.send('/silent-command game.print([[[Discord] ' + message.author.username + ': ' + parseMessage + ']])');
+		})
+
 	}
 });
 
@@ -95,7 +98,6 @@ function readLastLine(path)
 		if (err) throw err;
 		var lines = data.trim().split('\n');
 		lastLine = lines.slice(-1)[0];
-		console.log(lastLine);
 		if(path == config.chatLog && lastLine.length > 0)  //chatlog
 		{
 			//pasrs name and message
@@ -104,23 +106,56 @@ function readLastLine(path)
 		if(path == config.playerLog  && lastLine.length > 0)  //player join/leave/kill
 		{
 			//use bot to send leave/join message
+			consoleLogging("message to Discord web hook: " + lastLine);
 			bot.channels.get(config.channelListen).send("**" + lastLine + "**")
 		}		
 	});
-		
-	
 }
 
 //discord webhook
 function sendMessage(name, msg)
 {
-	console.log(msg);
+	consoleLogging("message to Discord web hook: " + name +  msg);
 	const send = new webhook.MessageBuilder()
                 .setName(name)
                 .setText(msg)
 	Hook.send(send);
 }
 
+//only for strings...
+function consoleLogging(message){
+	if(config.debugLogs == true){
+		console.log(Date() + ": " + message);
+	}
+}
+
+async function parseDiscordIDfromMessage(guildId, message){
+
+	//parse out user ids and replace with server nickname
+	var userIDRegexp = /(<@!(\d*)>)/g;
+	var userIDMatch = userIDRegexp.exec(message);
+	if(userIDMatch && userIDMatch[1] && userIDMatch[2]){
+		consoleLogging("found user ID in message");
+		let guild = await bot.guilds.get(guildId);
+		let member = guild.member(userIDMatch[2]);
+		let nickname = member ? member.displayName : member.user.username ? member.user.username : null;
+		consoleLogging("replacing with "+ nickname?nickname:"not found");
+		return nickname? message.replace(userIDRegexp, "@"+nickname) : message
+	}
+
+	//parse out channel id and replace iwth channel name
+	var channelIDRegexp = /(<#(\d*)>)/g;
+	var channelIDMatch = channelIDRegexp.exec(message);
+	if(channelIDMatch && channelIDMatch[1] && channelIDMatch[2]){
+		consoleLogging("found channel ID in message");
+		let channel = await bot.channels.get(channelIDMatch[2]);
+		let channelName = channel.name || null;
+		consoleLogging("replacing with "+ channelName?channelName:"not found");
+		return channelName? message.replace(channelIDRegexp, "#"+channelName) : message
+	}
+
+	return message;
+}
 
 
 
