@@ -1,7 +1,8 @@
 //0.01 
 const Discord = require("discord.js"); //npm install discord.js
 var fs = require('fs');
-const webhook = require("webhook-discord") //npm install webhook-discord
+//const webhook = require("webhook-discord") 
+const { Webhook } = require('discord-webhook-node'); //npm i discord-webhook-node
 var chokidar = require('chokidar'); //npm install chokidar
 var Rcon = require('rcon');  //npm install rcon
 
@@ -12,15 +13,21 @@ const auth = JSON.parse(RAWauth);
 let RAWconfig = fs.readFileSync('./config.json');
 const config  = JSON.parse(RAWconfig);
 
-
+consoleLogging("starting");
 const bot = new Discord.Client();
-const Hook = new webhook.Webhook(config.webHook);
+const Hook = new Webhook(config.webHook);
+//const Hook = new webhook.Webhook(config.webHook);
 
 
 fs.writeFile(config.chatLog, '', function(){});
 fs.writeFile(config.playerLog, '', function(){});
 
-bot.login(auth.token);
+
+bot.login(auth.token).catch(e => {
+	consoleLogging(e);
+	consoleLogging("Exiting after 10 seconds");
+	new Promise(resolve => setTimeout(resolve, 10000));
+});
 
 var conn
 //connect to Rcon
@@ -116,7 +123,7 @@ function readLastLine(path)
 function sendMessage(name, msg)
 {
 	consoleLogging("message to Discord web hook: " + name +  msg);
-	const send = new webhook.MessageBuilder()
+	const send = new MessageBuilder()
                 .setName(name)
                 .setText(msg)
 	Hook.send(send);

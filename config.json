@@ -1,10 +1,10 @@
 {
-   "chatLog": "C:\\Users\\USERPROFILE\\AppData\\Roaming\\Factorio\\script-output\\ChatLog.log",
-   "playerLog": "C:\\Users\\USERPROFILE\\AppData\\Roaming\\Factorio\\script-output\\PlayerLog.log",
+   "chatLog": "C:\\Users\\KevinLucas\\Desktop\\New folder (2)\\ChatLog.log",
+   "playerLog": "C:\\Users\\KevinLucas\\Desktop\\New folder (2)\\PlayerLog.log",
    "webHook": "https://discordapp.com/api/webhooks/000000000000000000/FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
    "channelListen": "000000000000000000",
    "RconIP": "127.0.0.1",
    "RconPort": "8888",
    "RconPassword": "password",
-   "debugLogs": false
+   "debugLogs": true
 }
