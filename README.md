@@ -43,6 +43,11 @@ config.json
   set RconPort (Same port you set in your server launch params)
 
   set RconPassword (Same pass you set in your server launch params)
+  
+  set debugLogs preference. This WILL chew up space, only turn on when debugging.
+  
+DiscordNames.json (optional)
+  set discord ids to a name. This is uesd so when you @ someone in discord it shows that users set name and not ID.
 
 # PSiChatUtil
 Factorio Utility mod that exploits the write_file function to retrieve messages from in-game-chat.
@@ -72,10 +77,4 @@ Navigate in the cmd prompt to the folder you have the FactorioChatBot (cd)
 
   Run the following commands within that directory
 
-npm install discord.js --save
-
-npm install webhook-discord --save
-
-npm install chokidar --save
-
-npm isntall rcon --save
+npm install
