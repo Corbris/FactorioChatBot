@@ -78,3 +78,5 @@ Navigate in the cmd prompt to the folder you have the FactorioChatBot (cd)
   Run the following commands within that directory
 
 npm install
+  
+node FactorioChatBot.js
