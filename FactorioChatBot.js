@@ -2,6 +2,7 @@
 
 //keeps the node instance open for at least 30seconds.
 new Promise(resolve => setTimeout(resolve, 30000));
+var fs = require('fs');
 
 //set config to empty jobjec to use the logging functions before config is loaded. 
 let config = {};
@@ -10,8 +11,7 @@ consoleLogging("starting", true);
 
 consoleLogging("importing packages", true);
 const Discord = require("discord.js"); //npm install discord.js
-var fs = require('fs');
-const { Webhook } = require('discord-webhook-node'); //npm i discord-webhook-node
+const { Webhook, MessageBuilder } = require('discord-webhook-node'); //npm i discord-webhook-node
 var chokidar = require('chokidar'); //npm install chokidar
 var Rcon = require('rcon');  //npm install rcon
 
@@ -21,6 +21,8 @@ let RAWauth = fs.readFileSync('./bot_auth.json');
 const auth = JSON.parse(RAWauth);
 let RAWconfig = fs.readFileSync('./config.json');
 config = JSON.parse(RAWconfig);
+let RAWdiscordNames = fs.readFileSync('./DiscordNames.json');
+discordNames = JSON.parse(RAWdiscordNames);
 
 consoleLogging("setting up discord bot");
 const bot = new Discord.Client();
@@ -125,14 +127,11 @@ function readLastLine(path)
 			//pasrs name and message
 			parseMessage(lastLine);
 		}
-		if(path == config.playerLog  && lastLine.length > 0)  //player join/leave/kill
+		else if(path == config.playerLog  && lastLine.length > 0)  //player join/leave/kill
 		{
 			//use bot to send leave/join message
 			consoleLogging("message to Discord web hook: " + lastLine);
 			bot.channels.get(config.channelListen).send("**" + lastLine + "**")
-		}
-		else{
-			consoleLogging("path is not valid, or defined in the config");
 		}
 	});
 }
@@ -141,17 +140,22 @@ function readLastLine(path)
 function sendMessage(name, msg)
 {
 	consoleLogging("message to Discord web hook: " + name +  msg);
-	const send = new MessageBuilder()
-                .setName(name)
-                .setText(msg)
-	Hook.send(send);
+	try{
+		Hook.setUsername(name);
+		Hook.send(msg);
+	}catch(e){
+		console.log(e);
+	}
+	
 }
 
 //logging function based config, or bypass.
 //sets a timeout for 20seconds after each log to keep the instance alive.
 function consoleLogging(message, bypass=false){
 	if((config && config.debugLogs) || bypass){
-		console.log(Date() + ": " + message);
+		let log = Date() + ": " + message
+		console.log(log);
+		fs.writeFile("./FactorioChatBot-logs.log", log+'\n', { flag: 'a' }, function(err){if(err)consoleLogging(err);});
 		new Promise(resolve => setTimeout(resolve, 20000));
 	}
 }
@@ -162,25 +166,40 @@ async function parseDiscordIDfromMessage(guildId, message){
 	//parse out user ids and replace with server nickname
 	var userIDRegexp = /(<@!(\d*)>)/g;
 	var userIDMatch = userIDRegexp.exec(message);
+	console.log(userIDMatch)
 	if(userIDMatch && userIDMatch[1] && userIDMatch[2]){
 		consoleLogging("found user ID in message");
-		let guild = await bot.guilds.get(guildId);
-		let member = guild.member(userIDMatch[2]);
-		let nickname = member ? member.displayName : member.user.username ? member.user.username : null;
-		consoleLogging("replacing with "+ nickname?nickname:"not found");
-		return nickname? message.replace(userIDRegexp, "@"+nickname) : message
+
+		let nickname = null;
+		if(discordNames){
+			nickname = discordNames[userIDMatch[2]];
+			if(!nickname){consoleLogging("id not found in discord names file")}
+
+		}
+		else{
+			consoleLogging("empty discord name file");
+		}
+
+
+		return nickname? message.replace(userIDRegexp, nickname) : message
+
+		// let guild = await bot.guilds.get(guildId);
+		// let member = guild.members();
+		// let nickname = member ? member.displayName : member.user.username ? member.user.username : null;
+		// consoleLogging("replacing with "+ nickname?nickname:"not found");
+		// return nickname? message.replace(userIDRegexp, "@"+nickname) : message
 	}
 
 	//parse out channel id and replace iwth channel name
-	var channelIDRegexp = /(<#(\d*)>)/g;
-	var channelIDMatch = channelIDRegexp.exec(message);
-	if(channelIDMatch && channelIDMatch[1] && channelIDMatch[2]){
-		consoleLogging("found channel ID in message");
-		let channel = await bot.channels.get(channelIDMatch[2]);
-		let channelName = channel.name || null;
-		consoleLogging("replacing with "+ channelName?channelName:"not found");
-		return channelName? message.replace(channelIDRegexp, "#"+channelName) : message
-	}
+	// var channelIDRegexp = /(<#(\d*)>)/g;
+	// var channelIDMatch = channelIDRegexp.exec(message);
+	// if(channelIDMatch && channelIDMatch[1] && channelIDMatch[2]){
+	// 	consoleLogging("found channel ID in message");
+	// 	let channel = await bot.channels.get(channelIDMatch[2]);
+	// 	let channelName = channel.name || null;
+	// 	consoleLogging("replacing with "+ channelName?channelName:"not found");
+	// 	return channelName? message.replace(channelIDRegexp, "#"+channelName) : message
+	// }
 
 	return message;
 }
