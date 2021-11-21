@@ -1,32 +1,38 @@
 //0.01 
+
+//keeps the node instance open for at least 30seconds.
+new Promise(resolve => setTimeout(resolve, 30000));
+
+//set config to empty jobjec to use the logging functions before config is loaded. 
+let config = {};
+consoleLogging("starting", true);
+
+
+consoleLogging("importing packages", true);
 const Discord = require("discord.js"); //npm install discord.js
 var fs = require('fs');
-//const webhook = require("webhook-discord") 
 const { Webhook } = require('discord-webhook-node'); //npm i discord-webhook-node
 var chokidar = require('chokidar'); //npm install chokidar
 var Rcon = require('rcon');  //npm install rcon
 
 //read config file via fs, so it can be packaged without the needed configs.
+consoleLogging("loading configs", true);
 let RAWauth = fs.readFileSync('./bot_auth.json');
 const auth = JSON.parse(RAWauth);
-
 let RAWconfig = fs.readFileSync('./config.json');
-const config  = JSON.parse(RAWconfig);
+config = JSON.parse(RAWconfig);
 
-consoleLogging("starting");
+consoleLogging("setting up discord bot");
 const bot = new Discord.Client();
 const Hook = new Webhook(config.webHook);
 //const Hook = new webhook.Webhook(config.webHook);
 
-
-fs.writeFile(config.chatLog, '', function(){});
-fs.writeFile(config.playerLog, '', function(){});
-
+consoleLogging("clearing chat and player logs");
+fs.writeFile(config.chatLog, '', { flag: 'w' }, function(err){if(err)consoleLogging(err);});
+fs.writeFile(config.playerLog, '', { flag: 'w' }, function(err){if(err)consoleLogging(err);});
 
 bot.login(auth.token).catch(e => {
 	consoleLogging(e);
-	consoleLogging("Exiting after 10 seconds");
-	new Promise(resolve => setTimeout(resolve, 10000));
 });
 
 var conn
@@ -47,6 +53,7 @@ function RconConnect()
 		//failed to connect try again
 		RconConnect();
 	});
+
 	consoleLogging("Connecting to Rcon");
 	conn.connect();
 }
@@ -54,17 +61,19 @@ function RconConnect()
  
 //on bot start
 bot.on("ready", () => {
+	consoleLogging('Logged in as: ' + bot.user.username.toString() + ' - (' + bot.user.id.toString() + ')');
+
 	//connect to rcon
 	RconConnect();
-    consoleLogging('Logged in as: ' + bot.user.username.toString() + ' - (' + bot.user.id.toString() + ')');
-
 	//watch the chat log file for update
 	chokidar.watch(config.chatLog, {ignored: /(^|[\/\\])\../}).on('all', (event, path) => {
+		consoleLogging("detected change in chat log");
 		readLastLine(config.chatLog);
 	});
 	
 	//watch the player log file for update
 	chokidar.watch(config.playerLog, {ignored: /(^|[\/\\])\../}).on('all', (event, path) => {
+		consoleLogging("detected change in player log");
 		readLastLine(config.playerLog);
 	});
 });
@@ -74,6 +83,7 @@ bot.on("message", (message) => {
 	//longetr then 0, not a bot, and in channel = channelListen
 	if(message.content.length > 0 && !message.author.bot && message.channel.id === config.channelListen)
 	{
+		consoleLogging("got message from discord");
 		parseDiscordIDfromMessage(message.guild.id, message.content).then(parseMessage => {
 			consoleLogging("Discord to Rcon: (" + message.author.username + ': ' + parseMessage + ")");
 			conn.send('/silent-command game.print([[[Discord] ' + message.author.username + ': ' + parseMessage + ']])');
@@ -88,21 +98,26 @@ bot.on("message", (message) => {
 
 function parseMessage(msg)
 {
+	consoleLogging("parrsing message from chat log")
 	var index = msg.indexOf(']');
 	if (undefined !== msg && msg.length && index > 1)
 	{
 		//send via webhook, parse name abd message via "[" & "]" characters
 		sendMessage(msg.slice(1,index), msg.slice(index+1));
 	}
+	else{
+		consoleLogging("mesage was undefined or not of length");
+	}
 	
 }
 
 function readLastLine(path)
 {
+	consoleLogging("attempting to read file at ", path);
 	fs.readFile(path, 'utf-8', function(err, data) 
 	{
 		//get last line of file. 
-		if (err) throw err;
+		if (err) consoleLogging(err);
 		var lines = data.trim().split('\n');
 		lastLine = lines.slice(-1)[0];
 		if(path == config.chatLog && lastLine.length > 0)  //chatlog
@@ -115,7 +130,10 @@ function readLastLine(path)
 			//use bot to send leave/join message
 			consoleLogging("message to Discord web hook: " + lastLine);
 			bot.channels.get(config.channelListen).send("**" + lastLine + "**")
-		}		
+		}
+		else{
+			consoleLogging("path is not valid, or defined in the config");
+		}
 	});
 }
 
@@ -129,14 +147,17 @@ function sendMessage(name, msg)
 	Hook.send(send);
 }
 
-//only for strings...
-function consoleLogging(message){
-	if(config.debugLogs == true){
+//logging function based config, or bypass.
+//sets a timeout for 20seconds after each log to keep the instance alive.
+function consoleLogging(message, bypass=false){
+	if((config && config.debugLogs) || bypass){
 		console.log(Date() + ": " + message);
+		new Promise(resolve => setTimeout(resolve, 20000));
 	}
 }
 
 async function parseDiscordIDfromMessage(guildId, message){
+	consoleLogging("attempting to parse out user ids and replace with server nickname");
 
 	//parse out user ids and replace with server nickname
 	var userIDRegexp = /(<@!(\d*)>)/g;
