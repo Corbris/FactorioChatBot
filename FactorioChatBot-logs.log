@@ -1,8 +1,0 @@
-Sun Nov 21 2021 01:46:27 GMT-0600 (Central Standard Time): Error: Incorrect login details were provided.Sun Nov 21 2021 01:46:53 GMT-0600 (Central Standard Time): startingSun Nov 21 2021 01:46:53 GMT-0600 (Central Standard Time): importing packagesSun Nov 21 2021 01:46:53 GMT-0600 (Central Standard Time): loading configsSun Nov 21 2021 01:46:53 GMT-0600 (Central Standard Time): setting up discord botSun Nov 21 2021 01:46:53 GMT-0600 (Central Standard Time): clearing chat and player logsSun Nov 21 2021 01:46:53 GMT-0600 (Central Standard Time): Error: ENOENT: no such file or directory, open 'C:\Users\KevinLucas\Desktop\New folder (2)\ChatLog.log'Sun Nov 21 2021 01:46:53 GMT-0600 (Central Standard Time): Error: ENOENT: no such file or directory, open 'C:\Users\KevinLucas\Desktop\New folder (2)\PlayerLog.log'Sun Nov 21 2021 01:46:53 GMT-0600 (Central Standard Time): Error: Incorrect login details were provided.Sun Nov 21 2021 01:47:14 GMT-0600 (Central Standard Time): starting
-Sun Nov 21 2021 01:47:14 GMT-0600 (Central Standard Time): importing packages
-Sun Nov 21 2021 01:47:14 GMT-0600 (Central Standard Time): loading configs
-Sun Nov 21 2021 01:47:14 GMT-0600 (Central Standard Time): setting up discord bot
-Sun Nov 21 2021 01:47:14 GMT-0600 (Central Standard Time): clearing chat and player logs
-Sun Nov 21 2021 01:47:14 GMT-0600 (Central Standard Time): Error: ENOENT: no such file or directory, open 'C:\Users\KevinLucas\Desktop\New folder (2)\ChatLog.log'
-Sun Nov 21 2021 01:47:14 GMT-0600 (Central Standard Time): Error: ENOENT: no such file or directory, open 'C:\Users\KevinLucas\Desktop\New folder (2)\PlayerLog.log'
-Sun Nov 21 2021 01:47:15 GMT-0600 (Central Standard Time): Error: Incorrect login details were provided.
