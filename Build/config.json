@@ -6,5 +6,5 @@
    "RconIP": "127.0.0.1",
    "RconPort": "8888",
    "RconPassword": "password",
-   "debugLogs": false
+   "debugLogs": true
 }
