@@ -1,4 +1,4 @@
-# Depriciated
+# DEPRECATED
 Take a look at, its actully getting updated.
 https://github.com/AGuyNamedJens/FactorioChatBot
 
