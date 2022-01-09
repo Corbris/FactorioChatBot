@@ -1,3 +1,8 @@
+# Depriciated
+Take a look at, its actully getting updated.
+https://github.com/AGuyNamedJens/FactorioChatBot
+
+
 # FactorioChatBot
 Bi-Directional chat bot integrating Discord and Factorio Chat written in nodejs.
 
